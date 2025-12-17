@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>SilverCare Planner 2025</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* 2025 트렌드 컬러: 웜 핑크 & 소프트 로즈 */
+            --primary: #d63384;       
+            --primary-bg: #fff0f6;    /* 연한 핑크 (버튼 배경) */
+            --bg: #fff5f7;            
+            --card-bg: #ffffff;
+            --text-main: #343a40;
+            --text-sub: #868e96;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: "Pretendard", "Noto Sans KR", sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text-main);
+            padding-bottom: 80px;
+        }
+
+        /* 헤더 */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #ff8787 100%);
+            color: #fff;
+            padding: 40px 20px 80px;
+            text-align: center;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            box-shadow: 0 10px 30px rgba(214, 51, 132, 0.2);
+            position: relative;
+        }
+
+        header h1 { margin: 0; font-size: 28px; font-weight: 800; }
+        header p { margin-top: 10px; font-size: 15px; opacity: 0.95; font-weight: 300; }
+
+        /* 컨테이너 */
+        .container {
+            max-width: 1200px;
+            margin: -60px auto 0;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 컨트롤 패널 (필터 영역) */
+        .control-panel {
+            display: flex;
+            justify-content: flex-end; /* 우측 정렬 */
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .filter-group {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .filter-label {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            outline: none;
+            color: #555;
+        }
+        .filter-select:focus { border-color: var(--primary); }
+
+        /* 탭 네비게이션 */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: var(--card-bg);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-sub);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(214, 51, 132, 0.3);
+        }
+
+        /* 그리드 */
+        .program-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* 카드 스타일 */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            border: 1px solid rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+        .badge.cognitive { background: #fff3bf; color: #f08c00; }
+        .badge.leisure { background: #e7f5ff; color: #1c7ed6; }
+        .badge.health { background: #ffe3e3; color: #e03131; }
+        .badge.social { background: #e6fcf5; color: #0ca678; }
+
+        .card h3 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f1f3f5;
+            padding-bottom: 15px;
+        }
+        .meta-info i { margin-right: 4px; color: #adb5bd; }
+
+        .card-desc {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        /* 유튜브 버튼 (롤백됨: 핑크 배경 + 진한 텍스트) */
+        .youtube-btn {
+            background: var(--primary-bg); /* 연한 핑크 */
+            color: var(--primary);         /* 진한 핑크 */
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .youtube-btn:hover {
+            background: #fcc2d7; 
+        }
+
+        .no-result {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            color: var(--text-sub);
+        }
+
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            color: #adb5bd;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        footer span { font-weight: 600; color: #868e96; }
+
+        @media (max-width: 600px) {
+            .control-panel { flex-direction: column; align-items: stretch; }
+            .filter-group { justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1><i class="fas fa-heart-pulse"></i> 실버케어 플래너</h1>
+    <p>사회복지사를 위한 프로그램 DB (Total: 120+)</p>
+</header>
+
+<div class="container">
+
+    <!-- 컨트롤 패널: 우측 대상 구분 필터 -->
+    <div class="control-panel">
+        <div class="filter-group">
+            <span class="filter-label">대상구분</span>
+            <select id="targetSelect" class="filter-select" onchange="renderList()">
+                <option value="">전체 보기</option>
+                <option value="치매">치매 어르신</option>
+                <option value="와상">와상 어르신</option>
+                <option value="편마비">편마비/휠체어</option>
+                <option value="남성">남성 어르신</option>
+                <option value="여성">여성 어르신</option>
+                <option value="인지">인지 저하군</option>
+                <option value="그룹">그룹 활동</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 탭 네비게이션 -->
+    <div class="nav-tabs">
+        <button class="nav-btn active" data-tab="all" onclick="setTab('all')">전체보기</button>
+        <button class="nav-btn" data-tab="cognitive" onclick="setTab('cognitive')">🧠 인지기능</button>
+        <button class="nav-btn" data-tab="leisure" onclick="setTab('leisure')">🎨 여가/취미</button>
+        <button class="nav-btn" data-tab="health" onclick="setTab('health')">💪 신체/건강</button>
+        <button class="nav-btn" data-tab="social" onclick="setTab('social')">🤝 사회적응</button>
+    </div>
+
+    <!-- 리스트 영역 -->
+    <div id="grid-container" class="program-grid">
+        <!-- JS로 로딩됨 -->
+    </div>
+
+</div>
+
+<footer>
+    © 2025 SilverCare Planner · Designed by <span>S'wer Youngkyung Choi</span><br>
+    All rights reserved for social workers.
+</footer>
+
+<script>
+    /* 
+       데이터 베이스 (120개 고유 항목) 
+       - 뻥튀기 코드 없이 실제 데이터로만 구성됨
+    */
+    const programDB = [
+        // --- 1. 인지기능 (Cognitive) : 30 items ---
+        { type: 'cognitive', title: '화투 그림 짝 맞추기', target: '경증 치매', time: '40분', desc: '화투 그림을 오려 만든 카드를 뒤집어 짝을 맞추며 기억력 훈련.' },
+        { type: 'cognitive', title: '시장보기 놀이', target: '초기 치매', time: '50분', desc: '모형 돈으로 물건을 사고 계산하며 수리 능력 유지.' },
+        { type: 'cognitive', title: '속담 이어 말하기', target: '전체', time: '30분', desc: '진행자가 앞부분을 말하면 뒷부분을 완성하기.' },
+        { type: 'cognitive', title: '일일 달력 만들기', target: '지남력 저하', time: '20분', desc: '오늘 날짜, 요일, 날씨를 직접 적어보며 시간 인지.' },
+        { type: 'cognitive', title: '색깔 판 뒤집기', target: '그룹 활동', time: '30분', desc: '청팀 백팀으로 나눠 판을 뒤집는 경쟁 게임.' },
+        { type: 'cognitive', title: '만다라 색칠하기', target: '중증 치매', time: '40분', desc: '반복되는 패턴을 칠하며 심리적 안정 유도.' },
+        { type: 'cognitive', title: '과일 이름 대기', target: '언어 장애', time: '30분', desc: '초성을 보고 과일 이름을 맞추며 어휘력 자극.' },
+        { type: 'cognitive', title: '콩 고르기', target: '와상/소근육', time: '30분', desc: '검은콩과 흰콩을 섞어놓고 분류하기.' },
+        { type: 'cognitive', title: '틀린 그림 찾기', target: '인지 양호', time: '30분', desc: '두 그림의 다른 곳을 찾으며 집중력 향상.' },
+        { type: 'cognitive', title: '돈 세기 훈련', target: '경증 치매', time: '40분', desc: '모형 지폐를 세어보고 금액 합산하기.' },
+        { type: 'cognitive', title: '소리 맞추기 퀴즈', target: '시각 장애', time: '30분', desc: '동물 소리, 악기 소리를 듣고 무엇인지 맞추기.' },
+        { type: 'cognitive', title: '패턴 따라하기', target: '중증 치매', time: '30분', desc: '진행자가 만든 블록 모양을 똑같이 따라 만들기.' },
+        { type: 'cognitive', title: '빨대 목걸이 만들기', target: '소근육', time: '40분', desc: '빨대를 잘라 끈에 꿰어 패턴 만들기.' },
+        { type: 'cognitive', title: '나의 고향 회상', target: '우울감', time: '50분', desc: '고향 사진을 보며 옛 기억 이야기 나누기.' },
+        { type: 'cognitive', title: '숫자 순서 잇기', target: '인지 저하', time: '30분', desc: '1부터 순서대로 점을 이어 그림 완성하기.' },
+        { type: 'cognitive', title: '같은 그림 찾기', target: '전체', time: '30분', desc: '여러 그림 중 똑같은 그림 2개를 찾아내기.' },
+        { type: 'cognitive', title: '단어 거꾸로 말하기', target: '인지 양호', time: '20분', desc: '제시된 단어를 거꾸로 말해보며 작업 기억력 훈련.' },
+        { type: 'cognitive', title: '퍼즐 맞추기', target: '경증 치매', time: '40분', desc: '난이도에 맞는 조각 퍼즐 맞추기.' },
+        { type: 'cognitive', title: '시계 보기 훈련', target: '지남력 저하', time: '30분', desc: '모형 시계바늘을 돌려 특정 시간 맞추기.' },
+        { type: 'cognitive', title: '얼굴 이름 연결하기', target: '치매 예방', time: '30분', desc: '유명인 사진을 보고 이름 맞추기.' },
+        { type: 'cognitive', title: '칠교 놀이', target: '인지 양호', time: '40분', desc: '칠교 조각으로 다양한 모양 구성하기.' },
+        { type: 'cognitive', title: '미로 찾기', target: '집중력', time: '30분', desc: '출발점에서 도착점까지 선 긋기.' },
+        { type: 'cognitive', title: '스무고개 퀴즈', target: '그룹 활동', time: '40분', desc: '설명을 듣고 사물 이름 맞추기.' },
+        { type: 'cognitive', title: '글자 카드 조합', target: '언어 인지', time: '30분', desc: '낱글자 카드를 조합해 단어 만들기.' },
+        { type: 'cognitive', title: '도형 분류하기', target: '중증 치매', time: '30분', desc: '동그라미, 세모, 네모 모양끼리 분류.' },
+        { type: 'cognitive', title: '전화번호 누르기', target: '일상 훈련', time: '30분', desc: '가족이나 응급번호 누르는 연습.' },
+        { type: 'cognitive', title: '태극기 색칠하기', target: '전체', time: '30분', desc: '태극기 도안을 올바른 색으로 칠하기.' },
+        { type: 'cognitive', title: '가계부 적기', target: '여성 어르신', time: '40분', desc: '가상의 수입 지출을 기록하며 계산.' },
+        { type: 'cognitive', title: '주사위 더하기', target: '계산 능력', time: '30분', desc: '주사위 두 개를 던져 나온 수 더하기.' },
+        { type: 'cognitive', title: '낱말 퍼즐(가로세로)', target: '인지 양호', time: '50분', desc: '쉬운 단어로 구성된 십자말 풀이.' },
+
+        // --- 2. 여가/취미 (Leisure) : 30 items ---
+        { type: 'leisure', title: '어르신 낚시놀이', target: '편마비', time: '50분', desc: '자석 낚싯대로 물고기 그림 낚기.' },
+        { type: 'leisure', title: '나만의 화분 심기', target: '원예 치료', time: '60분', desc: '다육식물을 화분에 심고 이름 지어주기.' },
+        { type: 'leisure', title: '트로트 노래방', target: '전체', time: '60분', desc: '애창곡 부르며 스트레스 해소.' },
+        { type: 'leisure', title: '옛날 영화 감상', target: '와상 가능', time: '90분', desc: '미워도 다시한번 등 고전 영화 감상.' },
+        { type: 'leisure', title: '손 마사지 & 팩', target: '여성 어르신', time: '40분', desc: '서로 핸드크림을 발라주며 마사지.' },
+        { type: 'leisure', title: '종이비행기 날리기', target: '남성 어르신', time: '30분', desc: '종이비행기를 접어 멀리 날리기 시합.' },
+        { type: 'leisure', title: '전통 탈 만들기', target: '인지 양호', time: '50분', desc: '종이 탈에 색칠하고 꾸미기.' },
+        { type: 'leisure', title: '윷놀이 한판', target: '그룹 활동', time: '60분', desc: '팀을 나누어 대형 윷놀이 진행.' },
+        { type: 'leisure', title: '비누 만들기', target: '소근육', time: '60분', desc: '비누 베이스를 녹여 틀에 붓고 굳히기.' },
+        { type: 'leisure', title: '클레이 아트', target: '중증 치매', time: '40분', desc: '말랑한 점토로 자유롭게 만들기.' },
+        { type: 'leisure', title: '족욕 테라피', target: '피로 회복', time: '30분', desc: '따뜻한 물에 아로마 오일을 풀어 족욕.' },
+        { type: 'leisure', title: '민요 부르기', target: '전체', time: '40분', desc: '장구 장단에 맞춰 아리랑 부르기.' },
+        { type: 'leisure', title: '구슬 꿰기 팔찌', target: '여성 어르신', time: '40분', desc: '큰 구슬을 꿰어 팔찌 만들기.' },
+        { type: 'leisure', title: '봉숭아 물들이기', target: '여름 시즌', time: '60분', desc: '손톱에 봉숭아 물을 들이며 추억 회상.' },
+        { type: 'leisure', title: '종이컵 쌓기', target: '집중력', time: '30분', desc: '종이컵을 높이 쌓거나 피라미드 만들기.' },
+        { type: 'leisure', title: '색종이 찢어 붙이기', target: '중증 치매', time: '40분', desc: '모자이크 기법으로 도안 채우기.' },
+        { type: 'leisure', title: '다도 체험', target: '차분한 그룹', time: '40분', desc: '따뜻한 차를 마시며 담소 나누기.' },
+        { type: 'leisure', title: '마술 공연 관람', target: '전체', time: '50분', desc: '간단한 마술을 배우거나 보기.' },
+        { type: 'leisure', title: '수수깡 안경 만들기', target: '소근육', time: '30분', desc: '수수깡을 구부려 안경 모양 만들기.' },
+        { type: 'leisure', title: '모래 놀이 치료', target: '정서 안정', time: '40분', desc: '고운 모래를 만지며 촉감 느끼기.' },
+        { type: 'leisure', title: '에코백 꾸미기', target: '인지 양호', time: '50분', desc: '무지 가방에 패브릭 마카로 그림 그리기.' },
+        { type: 'leisure', title: '식물 물주기', target: '일상 활동', time: '20분', desc: '요양원 내 화분에 직접 물 주기.' },
+        { type: 'leisure', title: '신문지 왕관 만들기', target: '전체', time: '30분', desc: '신문지를 접어 왕관을 만들고 써보기.' },
+        { type: 'leisure', title: '악기 연주(탬버린)', target: '음악 활동', time: '30분', desc: '음악에 맞춰 박자에 맞게 악기 흔들기.' },
+        { type: 'leisure', title: '네일 아트', target: '여성 어르신', time: '40분', desc: '매니큐어를 바르고 스티커 붙이기.' },
+        { type: 'leisure', title: '바둑/오목', target: '남성 어르신', time: '60분', desc: '바둑판을 이용해 오목이나 알까기.' },
+        { type: 'leisure', title: '풍선 아트', target: '전체', time: '40분', desc: '강아지, 칼 등 풍선 모양 만들기.' },
+        { type: 'leisure', title: '석고 방향제 만들기', target: '인지 양호', time: '50분', desc: '석고 반죽에 향료를 섞어 굳히기.' },
+        { type: 'leisure', title: '필사 하기', target: '서예', time: '40분', desc: '좋은 글귀나 시를 종이에 따라 쓰기.' },
+        { type: 'leisure', title: '사진 찍기 놀이', target: '자존감', time: '30분', desc: '소품을 활용해 서로 사진 찍어주기.' },
+
+        // --- 3. 신체/건강 (Health) : 30 items ---
+        { type: 'health', title: '풍선 배구', target: '휠체어', time: '40분', desc: '앉아서 풍선을 손으로 쳐서 넘기기.' },
+        { type: 'health', title: '세라밴드 체조', target: '근력 저하', time: '30분', desc: '탄력 밴드를 당기며 근력 운동.' },
+        { type: 'health', title: '건강 박수', target: '와상 가능', time: '20분', desc: '혈액순환을 돕는 다양한 박수 치기.' },
+        { type: 'health', title: '콩주머니 던지기', target: '전체', time: '40분', desc: '박이나 바구니를 향해 던지기.' },
+        { type: 'health', title: '실버 요가', target: '유연성', time: '40분', desc: '의자에 앉아 하는 스트레칭.' },
+        { type: 'health', title: '실내 볼링', target: '남성 어르신', time: '50분', desc: '페트병 핀을 공으로 쓰러뜨리기.' },
+        { type: 'health', title: '고리 던지기', target: '집중력', time: '30분', desc: '목표 기둥에 고리 걸기.' },
+        { type: 'health', title: '신문지 격파', target: '스트레스', time: '30분', desc: '신문지를 주먹으로 뚫으며 감정 발산.' },
+        { type: 'health', title: '낙하산(파라슈트)', target: '그룹 활동', time: '40분', desc: '큰 천을 함께 잡고 흔들기.' },
+        { type: 'health', title: '투호 놀이', target: '전통 놀이', time: '40분', desc: '화살을 통에 던져 넣기.' },
+        { type: 'health', title: '탁구공 나르기', target: '균형 감각', time: '30분', desc: '숟가락에 탁구공 얹고 반환점 돌기.' },
+        { type: 'health', title: '젠가 블록 빼기', target: '소근육', time: '40분', desc: '나무 블록 무너지지 않게 빼기.' },
+        { type: 'health', title: '찍찍이 다트', target: '상체 운동', time: '40분', desc: '안전한 공을 다트판에 던지기.' },
+        { type: 'health', title: '짐볼 굴리기', target: '하지 운동', time: '30분', desc: '발로 큰 공을 굴려 주고받기.' },
+        { type: 'health', title: '손수건 체조', target: '전체', time: '20분', desc: '음악에 맞춰 손수건 흔들기.' },
+        { type: 'health', title: '게이트볼 놀이', target: '신체 양호', time: '60분', desc: '실내용 채로 공을 쳐서 문 통과.' },
+        { type: 'health', title: '탁구 풍선 불기', target: '폐활량', time: '20분', desc: '빨대로 탁구공 불어 옮기기.' },
+        { type: 'health', title: '발로 신문지 찢기', target: '하지 근력', time: '20분', desc: '발가락을 이용해 신문지 찢기.' },
+        { type: 'health', title: '수건 돌리기', target: '유연성', time: '30분', desc: '수건을 양손으로 잡고 스트레칭.' },
+        { type: 'health', title: '비치볼 주고받기', target: '순발력', time: '30분', desc: '가벼운 비치볼을 서로 던져주기.' },
+        { type: 'health', title: '뿅망치 게임', target: '순발력', time: '30분', desc: '두더지 잡기나 뿅망치 대결.' },
+        { type: 'health', title: '계단 오르기 훈련', target: '보행 가능', time: '20분', desc: '안전바 잡고 계단 오르내리기.' },
+        { type: 'health', title: '앉아서 걷기', target: '하지 운동', time: '20분', desc: '의자에 앉아 제자리 걸음 동작.' },
+        { type: 'health', title: '목 운동(도리도리)', target: '경직 완화', time: '10분', desc: '목 근육을 부드럽게 푸는 체조.' },
+        { type: 'health', title: '손가락 운동', target: '치매 예방', time: '15분', desc: '주먹 쥐고 펴기, 손가락 셈하기.' },
+        { type: 'health', title: '미니 농구', target: '남성 어르신', time: '40분', desc: '작은 골대에 공 던져 넣기.' },
+        { type: 'health', title: '훌라후프 돌리기', target: '허리 운동', time: '30분', desc: '훌라후프를 허리나 팔로 돌리기.' },
+        { type: 'health', title: '오재미 던지기', target: '집중력', time: '30분', desc: '오재미를 표적에 맞추기.' },
+        { type: 'health', title: '릴레이 걷기', target: '보행 훈련', time: '40분', desc: '팀을 이뤄 반환점 돌아오기.' },
+        { type: 'health', title: '휴지심 탑 쌓기', target: '상체 조절', time: '30분', desc: '휴지심을 높이 쌓고 무너뜨리기.' },
+
+        // --- 4. 사회적응 (Social) : 30 items ---
+        { type: 'social', title: '생신 잔치', target: '월별 생신자', time: '60분', desc: '생일 축하 노래 부르고 케이크 나눔.' },
+        { type: 'social', title: '요리 교실(주먹밥)', target: '여성 어르신', time: '60분', desc: '재료를 섞어 주먹밥 만들어 먹기.' },
+        { type: 'social', title: '편지 쓰기', target: '가족', time: '40분', desc: '가족에게 사랑의 편지 쓰기.' },
+        { type: 'social', title: '산책 프로그램', target: '거동 가능', time: '60분', desc: '인근 공원이나 마당 산책.' },
+        { type: 'social', title: '칭찬 릴레이', target: '전체', time: '30분', desc: '옆 사람 칭찬 한마디씩 해주기.' },
+        { type: 'social', title: '송편 빚기', target: '추석', time: '60분', desc: '명절 맞이 송편 만들기.' },
+        { type: 'social', title: '트리 꾸미기', target: '크리스마스', time: '50분', desc: '다함께 크리스마스 장식 달기.' },
+        { type: 'social', title: '장기자랑', target: '전체', time: '90분', desc: '노래나 춤 솜씨 뽐내기.' },
+        { type: 'social', title: '카네이션 달기', target: '어버이날', time: '50분', desc: '서로 가슴에 꽃 달아주기.' },
+        { type: 'social', title: '어르신 바자회', target: '시장 놀이', time: '120분', desc: '물건을 교환하거나 구입 체험.' },
+        { type: 'social', title: '소원 나무', target: '새해', time: '40분', desc: '새해 소원을 적어 나무에 걸기.' },
+        { type: 'social', title: '동화 구연', target: '전체', time: '40분', desc: '강사가 들려주는 옛날 이야기 듣기.' },
+        { type: 'social', title: '샌드위치 만들기', target: '그룹 활동', time: '50분', desc: '빵에 잼과 재료 넣어 간식 만들기.' },
+        { type: 'social', title: '짝꿍 소개하기', target: '신규 입소자', time: '30분', desc: '옆 짝꿍의 이름과 특징 소개.' },
+        { type: 'social', title: '차 마시며 대화', target: '소그룹', time: '40분', desc: '다과를 즐기며 일상 이야기 공유.' },
+        { type: 'social', title: '화채 만들기', target: '여름', time: '50분', desc: '과일을 썰어 시원한 화채 만들기.' },
+        { type: 'social', title: '안마 해주기', target: '라포 형성', time: '30분', desc: '짝꿍 어깨 주물러 주기.' },
+        { type: 'social', title: '영상 편지', target: '가족', time: '40분', desc: '가족에게 보낼 영상 메시지 녹화.' },
+        { type: 'social', title: '세배 하기', target: '설날', time: '40분', desc: '서로 덕담을 나누고 세배 연습.' },
+        { type: 'social', title: '보물 찾기', target: '전체', time: '40분', desc: '숨겨진 쪽지나 사탕 찾기.' },
+        { type: 'social', title: '전 굽기', target: '명절', time: '60분', desc: '명절 전 부치기 체험 및 시식.' },
+        { type: 'social', title: '합창단 활동', target: '노래', time: '50분', desc: '다함께 화음 맞춰 노래 부르기.' },
+        { type: 'social', title: '역할극 놀이', target: '인지 양호', time: '50분', desc: '간단한 상황극(병원, 시장) 연기.' },
+        { type: 'social', title: '네일샵 놀이', target: '상호 작용', time: '40분', desc: '서로 손톱을 칠해주며 대화.' },
+        { type: 'social', title: '추억의 물건 소개', target: '회상', time: '40분', desc: '옛날 물건을 보며 경험 이야기.' },
+        { type: 'social', title: '김장 체험', target: '겨울', time: '60분', desc: '절인 배추에 양념 바르기.' },
+        { type: 'social', title: '팥빙수 만들기', target: '여름', time: '40분', desc: '얼음을 갈아 빙수 만들어 먹기.' },
+        { type: 'social', title: '멘토링 맺기', target: '신규/기존', time: '20분', desc: '적응 돕기 위한 짝꿍 정하기.' },
+        { type: 'social', title: '뉴스 읽어주기', target: '와상', time: '30분', desc: '오늘의 주요 뉴스를 읽어드리기.' },
+        { type: 'social', title: '감사 나무', target: '연말', time: '40분', desc: '감사했던 일을 적어 열매 달기.' }
+    ];
+
+    let currentTab = 'all';
+
+    function setTab(tab) {
+        currentTab = tab;
+        
+        // 탭 버튼 활성화 스타일
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if(btn.dataset.tab === tab) btn.classList.add('active');
+        });
+
+        renderList();
+    }
+
+    function renderList() {
+        const container = document.getElementById('grid-container');
+        container.innerHTML = ''; // 초기화
+
+        // 필터 값 가져오기
+        const targetFilter = document.getElementById('targetSelect').value;
+
+        // 필터링 로직
+        const filteredData = programDB.filter(item => {
+            // 1. 탭 필터 (Tab)
+            const matchTab = currentTab === 'all' || item.type === currentTab;
+            
+            // 2. 대상 필터 (Target)
+            const matchTarget = targetFilter === '' || item.target.includes(targetFilter) || 
+                                (targetFilter === '남성' && item.title.includes('남성')) ||
+                                (targetFilter === '여성' && (item.title.includes('여성') || item.desc.includes('여성')));
+
+            return matchTab && matchTarget;
+        });
+
+        // 결과 없음 처리
+        if (filteredData.length === 0) {
+            container.innerHTML = `<div class="no-result">
+                <i class="fas fa-search" style="font-size:30px; margin-bottom:15px; display:block;"></i>
+                조건에 맞는 프로그램이 없습니다.
+            </div>`;
+            return;
+        }
+
+        // 카드 생성
+        filteredData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            let badgeText = '';
+            if(item.type === 'cognitive') badgeText = '인지기능';
+            else if(item.type === 'leisure') badgeText = '여가/취미';
+            else if(item.type === 'health') badgeText = '신체/건강';
+            else if(item.type === 'social') badgeText = '사회적응';
+
+            // 유튜브 링크 생성
+            const youtubeLink = `https://www.youtube.com/results?search_query=${encodeURIComponent('요양원 ' + item.title)}`;
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="badge ${item.type}">${badgeText}</span>
+                </div>
+                <h3>${item.title}</h3>
+                <div class="meta-info">
+                    <span><i class="far fa-clock"></i> ${item.time}</span>
+                    <span><i class="far fa-user"></i> ${item.target}</span>
+                </div>
+                <div class="card-desc">
+                    ${item.desc}
+                </div>
+                <a href="${youtubeLink}" target="_blank" class="youtube-btn">
+                    <i class="fab fa-youtube"></i> 참고 영상 보기
+                </a>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // 초기 실행
+    setTab('all');
+
+</script>
+
+</body>
+</html>
